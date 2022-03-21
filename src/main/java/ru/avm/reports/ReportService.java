@@ -11,6 +11,7 @@ import ru.avm.reports.domain.Report;
 import ru.avm.reports.domain.ReportField;
 import ru.avm.reports.domain.ReportFilter;
 import ru.avm.reports.dto.ReportDto;
+import ru.avm.reports.dto.ReportFieldDto;
 import ru.avm.reports.dto.ReportResultDto;
 import ru.avm.reports.repository.ReportFieldRepository;
 import ru.avm.reports.repository.ReportFilterRepository;
@@ -45,6 +46,14 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
+    public List<ReportFieldDto> reportFields(Long reportId) {
+        return reportRepository.findById(reportId)
+                .map(report -> report.getFields().stream()
+                        .map(reportMapper::toDto)
+                        .collect(Collectors.toList()))
+                .orElseThrow();
+    }
+
     public ReportDto report(Long id) {
         return reportRepository.findById(id).map(reportMapper::toDto).orElseThrow();
     }
@@ -69,11 +78,11 @@ public class ReportService {
                 : createQuery(report, reportFields, reportFilters);
 
         reportFilters.forEach(reportFilter -> {
-            val param = query.getParameter(reportFilter.getParameter());
+            val param = query.getParameter("p" + reportFilter.getId());
 
             val type = param.getParameterType();
 
-            query.setParameter(reportFilter.getParameter(),
+            query.setParameter("p" + reportFilter.getId(),
                     getParameter(reportFilter, type, filters.get(reportFilter.getId())));
         });
 

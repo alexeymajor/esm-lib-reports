@@ -8,7 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.avm.reports.domain.Report;
 import ru.avm.reports.dto.ReportDto;
+import ru.avm.reports.dto.ReportFieldDto;
 import ru.avm.reports.dto.ReportResultDto;
+import ru.avm.security.acl.admin.AclController;
+import ru.avm.security.acl.admin.AdminService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -19,9 +22,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("reports")
-public class ReportController {
+public class ReportController implements AclController {
 
     private final ReportService reportService;
+
+    @Getter
+    private final AdminService adminService;
 
     @Getter
     private final String aclType = Report.class.getName();
@@ -30,7 +36,12 @@ public class ReportController {
     @PostFilter("hasPermission(filterObject.id, @reportController.aclType, 'read')")
     public List<ReportDto> reports() {
         return reportService.allReports();
+    }
 
+    @GetMapping("{id}/fields")
+    @PreAuthorize("hasPermission(#id, @reportController.aclType, 'read')")
+    public List<ReportFieldDto> reportFields(@PathVariable Long id) {
+        return reportService.reportFields(id);
     }
 
     @GetMapping("{id}")

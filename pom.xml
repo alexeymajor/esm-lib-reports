@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.avm</groupId>
     <artifactId>reports</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>reports</name>
     <description>reports</description>
     <properties>
@@ -19,6 +19,7 @@
         <lombok.version>1.18.22</lombok.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <com.vladmihalcea.hibernate-types-55>2.14.0</com.vladmihalcea.hibernate-types-55>
+        <avm.security>0.0.2</avm.security>
     </properties>
     <dependencies>
         <dependency>
@@ -42,7 +43,7 @@
         <dependency>
             <groupId>ru.avm</groupId>
             <artifactId>security</artifactId>
-            <version>0.0.1</version>
+            <version>${avm.security}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

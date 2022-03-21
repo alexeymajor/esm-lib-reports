@@ -2,11 +2,10 @@ package ru.avm.reports.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,6 +36,14 @@ public class Report implements Serializable {
     @Builder.Default
     @Column(name = "native", nullable = false, columnDefinition = "boolean not null default false")
     private Boolean isNative = false;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_id")
+    private final List<ReportField> fields = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_id")
+    private final List<ReportFilter> filters = new ArrayList<>();
 
 
 }
