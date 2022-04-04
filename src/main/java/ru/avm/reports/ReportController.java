@@ -33,25 +33,25 @@ public class ReportController implements AclController {
     private final String aclType = Report.class.getName();
 
     @GetMapping
-    @PostFilter("hasPermission(filterObject.id, @reportController.aclType, 'read')")
+    @PostFilter("hasAuthority('SCOPE_SERVCIE') || hasPermission(filterObject.id, @reportController.aclType, 'read')")
     public List<ReportDto> reports() {
         return reportService.allReports();
     }
 
     @GetMapping("{id}/fields")
-    @PreAuthorize("hasPermission(#id, @reportController.aclType, 'read')")
+    @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
     public List<ReportFieldDto> reportFields(@PathVariable Long id) {
         return reportService.reportFields(id);
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasPermission(#id, @reportController.aclType, 'read')")
+    @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
     public ReportDto runReport(@PathVariable Long id) {
         return reportService.report(id);
     }
 
     @GetMapping("{id}/run")
-    @PreAuthorize("hasPermission(#id, @reportController.aclType, 'read')")
+    @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
     public ReportResultDto runReport(@PathVariable Long id, HttpServletRequest request,
                                      @RequestParam(name = "fields") List<Long> fields) {
         val map = request.getParameterMap().entrySet().stream()
