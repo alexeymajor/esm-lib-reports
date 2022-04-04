@@ -3,6 +3,7 @@ package ru.avm.reports;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.avm.reports.converter.DefaultConverter;
@@ -86,21 +87,22 @@ public class ReportService {
                     getParameter(reportFilter, type, filters.get(reportFilter.getId())));
         });
 
+        @SuppressWarnings("deprecation")
         val data = query
-//                .unwrap(org.hibernate.Query.class)
-//                .setResultTransformer(
-//                        new ResultTransformer() {
-//                            @Override
-//                            public Object transformTuple(Object[] tuple, String[] aliases) {
-//                                return tuple;
-//                            }
-//
-//                            @Override
-//                            public List<Object[]> transformList(List collection) {
-//                                //noinspection unchecked
-//                                return collection;
-//                            }
-//                        })
+                .unwrap(org.hibernate.Query.class)
+                .setResultTransformer(
+                        new ResultTransformer() {
+                            @Override
+                            public Object transformTuple(Object[] tuple, String[] aliases) {
+                                return tuple;
+                            }
+
+                            @Override
+                            public List<Object[]> transformList(List collection) {
+                                //noinspection unchecked
+                                return collection;
+                            }
+                        })
                 .getResultList();
 
         //noinspection unchecked
@@ -108,10 +110,6 @@ public class ReportService {
                 .data(data)
                 .fields(reportFields.stream().map(reportMapper::toDto).collect(Collectors.toList()))
                 .build();
-    }
-
-    public void registerConverter(String type, ReportTypeConverter converter) {
-        converters.put(type, converter);
     }
 
     @SneakyThrows
