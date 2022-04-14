@@ -10,7 +10,7 @@ import lombok.Value;
 
 public class ReportFieldDto {
     Long id;
-    String title;
+    String label;
     String description;
     String field;
     String total;
