@@ -26,7 +26,7 @@ public class ReportField implements Serializable {
     private Long reportId;
 
     @Column(name = "title", nullable = false)
-    private String label;
+    private String title;
 
     @Column(name = "description")
     private String description;
