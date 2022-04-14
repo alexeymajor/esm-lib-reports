@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.avm.reports.domain.Report;
 import ru.avm.reports.dto.ReportDto;
 import ru.avm.reports.dto.ReportFieldDto;
+import ru.avm.reports.dto.ReportFilterDto;
 import ru.avm.reports.dto.ReportResultDto;
 import ru.avm.security.acl.admin.AclController;
 import ru.avm.security.acl.admin.AdminService;
@@ -42,6 +43,12 @@ public class ReportController implements AclController {
     @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
     public List<ReportFieldDto> reportFields(@PathVariable Long id) {
         return reportService.reportFields(id);
+    }
+
+    @GetMapping("{id}/filters")
+    @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
+    public List<ReportFilterDto> reportFilters(@PathVariable Long id) {
+        return reportService.reportFilters(id);
     }
 
     @GetMapping("{id}")

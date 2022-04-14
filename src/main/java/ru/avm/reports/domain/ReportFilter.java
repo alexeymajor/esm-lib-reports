@@ -1,20 +1,32 @@
 package ru.avm.reports.domain;
 
-import lombok.*;
+import com.vladmihalcea.hibernate.type.json.JsonType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import ru.avm.reports.dto.ReportFilterExpressionDto;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-@ToString
+
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonType.class),
+})
 
 @Entity
-@Table(name = "t_report_filter", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"report_id", "parameter"})
-})
+@Table(name = "t_report_filter")
 public class ReportFilter implements Serializable {
 
     @Id
@@ -30,10 +42,11 @@ public class ReportFilter implements Serializable {
     @Column(name = "clause", nullable = false)
     private String clause;
 
-    @Column(name = "parameter", nullable = false)
-    private String parameter;
-
     @Column(name = "parameter_type", nullable = false)
-    private String parameterType;
+    private String type;
+
+    @Type(type = "json")
+    @Column(name = "expression", columnDefinition = "json")
+    private ReportFilterExpressionDto expression;
 
 }

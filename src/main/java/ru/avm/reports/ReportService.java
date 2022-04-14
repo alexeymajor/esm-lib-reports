@@ -13,6 +13,7 @@ import ru.avm.reports.domain.ReportField;
 import ru.avm.reports.domain.ReportFilter;
 import ru.avm.reports.dto.ReportDto;
 import ru.avm.reports.dto.ReportFieldDto;
+import ru.avm.reports.dto.ReportFilterDto;
 import ru.avm.reports.dto.ReportResultDto;
 import ru.avm.reports.repository.ReportFieldRepository;
 import ru.avm.reports.repository.ReportFilterRepository;
@@ -53,6 +54,15 @@ public class ReportService {
                         .map(reportMapper::toDto)
                         .collect(Collectors.toList()))
                 .orElseThrow();
+    }
+
+    public List<ReportFilterDto> reportFilters(Long reportId) {
+        val report = reportRepository.findById(reportId).orElseThrow();
+
+        return report.getFilters().stream()
+                .map(reportMapper::toDto)
+                .collect(Collectors.toList());
+
     }
 
     public ReportDto report(Long id) {
@@ -183,7 +193,7 @@ public class ReportService {
     }
 
     private Object getParameter(ReportFilter reportFilter, Class<?> parameterType, String... values) {
-        return converters.getOrDefault(reportFilter.getParameterType(), defaultConverter)
+        return converters.getOrDefault(reportFilter.getType(), defaultConverter)
                 .convert(parameterType, values);
     }
 

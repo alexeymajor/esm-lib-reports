@@ -7,11 +7,11 @@ import lombok.Value;
 @Value
 @AllArgsConstructor
 @Builder
-
-public class ReportFilterDto {
-    Long id;
-    String description;
-    String clause;
+public class ReportFilterExpressionDto {
     String type;
-
+    String path;
+    String idKey;
+    String nameKey;
+    String formikId;
+    boolean multiple;
 }
