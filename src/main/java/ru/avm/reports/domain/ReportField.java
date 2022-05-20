@@ -46,4 +46,13 @@ public class ReportField implements Serializable {
     @Column(name = "type")
     private String type;
 
+    @Setter
+    @Builder.Default
+    @Column(name = "visible", nullable = false, columnDefinition = "boolean not null default true")
+    private Boolean visible = true;
+
+    @Setter
+    @Column(name = "place")
+    private Integer place;
+
 }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("${reports.path}")
+@RequestMapping("reports")
 public class ReportController implements AclController {
 
     private final ReportService reportService;

@@ -1,10 +1,7 @@
 package ru.avm.reports.domain;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -48,5 +45,13 @@ public class ReportFilter implements Serializable {
     @Type(type = "json")
     @Column(name = "expression", columnDefinition = "json")
     private ReportFilterExpressionDto expression;
+
+    @Setter
+    @Builder.Default
+    @Column(name = "visible", nullable = false, columnDefinition = "boolean not null default true")
+    private Boolean visible = true;
+
+    @Column(name = "place")
+    private Integer place;
 
 }

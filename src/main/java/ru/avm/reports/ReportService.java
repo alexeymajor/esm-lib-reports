@@ -51,6 +51,7 @@ public class ReportService {
     public List<ReportFieldDto> reportFields(Long reportId) {
         return reportRepository.findById(reportId)
                 .map(report -> report.getFields().stream()
+                        .filter(ReportField::getVisible)
                         .map(reportMapper::toDto)
                         .collect(Collectors.toList()))
                 .orElseThrow();
@@ -60,6 +61,7 @@ public class ReportService {
         val report = reportRepository.findById(reportId).orElseThrow();
 
         return report.getFilters().stream()
+                .filter(ReportFilter::getVisible)
                 .map(reportMapper::toDto)
                 .collect(Collectors.toList());
 

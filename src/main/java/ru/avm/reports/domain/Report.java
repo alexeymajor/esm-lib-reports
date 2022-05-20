@@ -39,11 +39,12 @@ public class Report implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
+    @OrderBy("place")
     private final List<ReportField> fields = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
+    @OrderBy("place")
     private final List<ReportFilter> filters = new ArrayList<>();
-
 
 }

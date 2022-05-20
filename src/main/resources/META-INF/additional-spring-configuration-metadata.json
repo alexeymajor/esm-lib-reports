@@ -1,9 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "reports.path",
-      "type": "java.lang.String",
-      "description": "path for ReportsController @RequestMapping."
-    }
-  ]
-}
