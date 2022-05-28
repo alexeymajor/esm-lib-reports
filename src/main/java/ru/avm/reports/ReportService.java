@@ -87,13 +87,19 @@ public class ReportService {
 
         val allFilters = reportFilterRepository.findAllByReportId(report.getId());
 
-        val required = allFilters.stream().map(ReportFilter::getRequired).collect(Collectors.toSet());
+        val required = allFilters.stream()
+                .map(ReportFilter::getRequired)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
         val reportFilters = allFilters.stream()
                 .filter(reportFilter -> filters.containsKey(reportFilter.getId()))
                 .collect(Collectors.toList());
 
-        val existsRequired = reportFilters.stream().map(ReportFilter::getRequired).collect(Collectors.toSet());
+        val existsRequired = reportFilters.stream()
+                .map(ReportFilter::getRequired)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
         required.removeAll(existsRequired);
 
