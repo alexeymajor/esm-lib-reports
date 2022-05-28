@@ -33,18 +33,23 @@ public class ReportFilter implements Serializable {
     @Column(name = "report_id", nullable = false)
     private Long reportId;
 
+    @Setter
     @Column(name = "required")
     private String required;
 
+    @Setter
     @Column(name = "description")
     private String description;
 
+    @Setter
     @Column(name = "clause", nullable = false)
     private String clause;
 
+    @Setter
     @Column(name = "parameter_type", nullable = false)
     private String type;
 
+    @Setter
     @Type(type = "json")
     @Column(name = "expression", columnDefinition = "json")
     private ReportFilterExpressionDto expression;
@@ -54,6 +59,7 @@ public class ReportFilter implements Serializable {
     @Column(name = "visible", nullable = false, columnDefinition = "boolean not null default true")
     private Boolean visible = true;
 
+    @Setter
     @Column(name = "place")
     private Integer place;
 

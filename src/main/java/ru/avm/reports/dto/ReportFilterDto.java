@@ -11,6 +11,7 @@ import lombok.Value;
 public class ReportFilterDto {
     Long id;
     String description;
+    String required;
     String clause;
     String type;
 
