@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class DateTimeConverter implements ReportTypeConverter {
@@ -14,9 +13,9 @@ public class DateTimeConverter implements ReportTypeConverter {
     @Override
     public LocalDateTime convert(Class<?> type, String[] values) {
         try {
-            return LocalDateTime.parse(values[0], DateTimeFormatter.ISO_DATE_TIME);
+            return LocalDateTime.parse(values[0]);
         } catch (Exception ignore) {
-            return LocalDate.parse(values[0], DateTimeFormatter.ISO_DATE).atStartOfDay();
+            return LocalDate.parse(values[0]).atStartOfDay();
         }
     }
 

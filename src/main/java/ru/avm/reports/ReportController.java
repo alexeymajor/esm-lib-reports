@@ -51,7 +51,7 @@ public class ReportController implements AclController {
         return reportService.reportFilters(id);
     }
 
-    @GetMapping("{id}")
+    @GetMapping({"{id}", "edit/{id}"})
     @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
     public ReportDto runReport(@PathVariable Long id) {
         return reportService.report(id);
