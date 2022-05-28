@@ -85,7 +85,21 @@ public class ReportService {
                 .sorted(Comparator.comparing(value -> fields.indexOf(value.getId())))
                 .collect(Collectors.toList());
 
-        val reportFilters = reportFilterRepository.findAllById(filters.keySet());
+        val allFilters = reportFilterRepository.findAllByReportId(report.getId());
+
+        val required = allFilters.stream().map(ReportFilter::getRequired).collect(Collectors.toSet());
+
+        val reportFilters = allFilters.stream()
+                .filter(reportFilter -> filters.containsKey(reportFilter.getId()))
+                .collect(Collectors.toList());
+
+        val existsRequired = reportFilters.stream().map(ReportFilter::getRequired).collect(Collectors.toSet());
+
+        required.removeAll(existsRequired);
+
+        if (required.size() > 0) {
+            throw new Exception("не все обязательные фильтры заполнены " + required);
+        }
 
         val query = report.getIsNative() ? createNativeReport(report, reportFields, reportFilters)
                 : createQuery(report, reportFields, reportFilters);
@@ -161,7 +175,7 @@ public class ReportService {
                                 .map(reportFilter -> reportFilter.getClause()
                                         .replace("?", ":p" + reportFilter.getId()))
                                 .collect(Collectors.joining(" and ")))
-                .filter(sid -> !sid.isBlank());
+                .filter(whereFilter -> !whereFilter.isBlank());
 
         return Optional.ofNullable(report.getWhereClause())
                 .filter(sid -> !sid.isBlank())
