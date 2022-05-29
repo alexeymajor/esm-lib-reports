@@ -21,6 +21,8 @@ import ru.avm.reports.repository.ReportRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -119,6 +121,7 @@ public class ReportService {
                     getParameter(reportFilter, type, filters.get(reportFilter.getId())));
         });
 
+        val start = System.nanoTime();
         @SuppressWarnings("deprecation")
         val data = query
                 .unwrap(org.hibernate.Query.class)
@@ -136,10 +139,12 @@ public class ReportService {
                             }
                         })
                 .getResultList();
+        val elapsed = System.nanoTime() - start;
 
         //noinspection unchecked
         return ReportResultDto.builder()
                 .data(data)
+                .execution(Duration.of(elapsed, ChronoUnit.NANOS))
                 .fields(reportFields.stream().map(reportMapper::toDto).collect(Collectors.toList()))
                 .build();
     }
