@@ -63,7 +63,7 @@ public class RelativePeriod {
     }
 
     private static final Pattern PATTERN =
-            Pattern.compile("([-+]?)P(?:([-+]?[0-9]+)Y)?(?:([-+]?[0-9]+)M)?(?:([-+]?[0-9]+)W)?(?:([-+]?[0-9]+)D)?", Pattern.CASE_INSENSITIVE);
+            Pattern.compile("([-+]?)P(?:([-+]?\\d+)Y)?(?:([-+]?\\d+)M)?(?:([-+]?\\d+)W)?(?:([-+]?\\d+)D)?", Pattern.CASE_INSENSITIVE);
 
     public static RelativePeriod parse(CharSequence text) {
         Objects.requireNonNull(text, "text");
