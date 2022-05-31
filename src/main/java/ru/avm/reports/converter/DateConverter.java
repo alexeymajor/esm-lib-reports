@@ -4,6 +4,7 @@ import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 public class DateConverter implements ReportTypeConverter {
@@ -13,10 +14,10 @@ public class DateConverter implements ReportTypeConverter {
     @Override
     public Object convert(Class<?> type, String... values) {
         val result = LocalDate.parse(values[0]);
-        if (type.equals(LocalDate.class)) {
-            return result;
+        if (LocalDateTime.class.equals(type)) {
+            return result.atStartOfDay();
         }
-        return result.atStartOfDay();
+        return result;
     }
 
     @Override
