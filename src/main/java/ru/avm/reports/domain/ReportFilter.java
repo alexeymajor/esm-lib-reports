@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import ru.avm.reports.dto.ReportFilterExpressionDto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -52,7 +51,7 @@ public class ReportFilter implements Serializable {
     @Setter
     @Type(type = "json")
     @Column(name = "expression", columnDefinition = "json")
-    private ReportFilterExpressionDto expression;
+    private Object expression;
 
     @Setter
     @Builder.Default

@@ -210,7 +210,7 @@ public class ReportService {
 
         return entityManager.createQuery(
                 "select " + String.join(",", select) +
-                        " from " + report.getEntity() + " e" + getWhere(report, filters) +
+                        " from " + report.getEntity() + " " + getWhere(report, filters) +
                         (groupBy.size() == 0 ? "" : " group by " + String.join(",", groupBy)) +
 
                         " order by " +

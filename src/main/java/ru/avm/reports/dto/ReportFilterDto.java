@@ -14,5 +14,6 @@ public class ReportFilterDto {
     String required;
     String clause;
     String type;
+    Object expression;
 
 }
