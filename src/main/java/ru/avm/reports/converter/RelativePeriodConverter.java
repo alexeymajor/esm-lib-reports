@@ -32,11 +32,11 @@ public class RelativePeriodConverter implements ReportTypeConverter {
 
     @Override
     public Object convert(Class<?> type, String... values) {
-        val result = convert(LocalDateTime.now(), values[0]);
-        if (type.equals(LocalDate.class)) {
-            return result.toLocalDate();
+        LocalDateTime result = LocalDateTime.now();
+        for (String value : values) {
+            result = convert(result, value);
         }
-        return result;
+        return LocalDate.class.equals(type) ? result.toLocalDate() : result;
     }
 
     @Override
