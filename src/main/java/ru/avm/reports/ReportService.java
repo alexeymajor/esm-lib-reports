@@ -3,7 +3,6 @@ package ru.avm.reports;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.avm.reports.converter.DefaultConverter;
@@ -125,19 +124,7 @@ public class ReportService {
         @SuppressWarnings("deprecation")
         val data = query
                 .unwrap(org.hibernate.Query.class)
-                .setResultTransformer(
-                        new ResultTransformer() {
-                            @Override
-                            public Object transformTuple(Object[] tuple, String[] aliases) {
-                                return tuple;
-                            }
-
-                            @Override
-                            public List<Object[]> transformList(List collection) {
-                                //noinspection unchecked
-                                return collection;
-                            }
-                        })
+                .setResultTransformer(ReportResultTransformer.INSTANCE)
                 .getResultList();
         val elapsed = System.nanoTime() - start;
 

@@ -34,7 +34,9 @@ public class RelativePeriodConverter implements ReportTypeConverter {
     public Object convert(Class<?> type, String... values) {
         LocalDateTime result = LocalDateTime.now();
         for (String value : values) {
-            result = convert(result, value);
+            for (String split : value.split(",")) {
+                result = convert(result, split);
+            }
         }
         return LocalDate.class.equals(type) ? result.toLocalDate() : result;
     }
