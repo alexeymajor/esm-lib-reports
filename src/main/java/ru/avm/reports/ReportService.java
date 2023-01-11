@@ -34,13 +34,10 @@ public class ReportService {
 
     private final EntityManager entityManager;
     private final DefaultConverter defaultConverter;
-
     private final Map<String, ReportTypeConverter> converters;
-
     private final ReportFilterRepository reportFilterRepository;
     private final ReportFieldRepository reportFieldRepository;
     private final ReportRepository reportRepository;
-
     private final ReportMapper reportMapper;
 
     public List<ReportDto> allReports() {
@@ -53,6 +50,7 @@ public class ReportService {
         return reportRepository.findById(reportId)
                 .map(report -> report.getFields().stream()
                         .filter(ReportField::getVisible)
+                        .sorted(Comparator.comparing(ReportField::getPlace))
                         .map(reportMapper::toDto)
                         .collect(Collectors.toList()))
                 .orElseThrow();
@@ -60,12 +58,11 @@ public class ReportService {
 
     public List<ReportFilterDto> reportFilters(Long reportId) {
         val report = reportRepository.findById(reportId).orElseThrow();
-
         return report.getFilters().stream()
                 .filter(ReportFilter::getVisible)
+                .sorted(Comparator.comparing(ReportFilter::getPlace))
                 .map(reportMapper::toDto)
                 .collect(Collectors.toList());
-
     }
 
     public ReportDto report(Long id) {
