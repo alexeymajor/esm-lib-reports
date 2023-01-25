@@ -21,4 +21,5 @@ public class ReportDto {
     Boolean isNative;
     List<ReportFieldDto> fields;
     List<ReportFilterDto> filters;
+    Integer position;
 }

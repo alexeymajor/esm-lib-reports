@@ -33,6 +33,9 @@ public class Report implements Serializable {
     @Column(name = "where_clause")
     private String whereClause;
     @Setter
+    @Column(name = "position")
+    private Integer position;
+    @Setter
     @Column(name = "icon")
     private String icon;
     @Setter
