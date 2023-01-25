@@ -1,16 +1,16 @@
 package ru.avm.reports;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.avm.reports.domain.Report;
 import ru.avm.reports.dto.ReportDto;
-import ru.avm.reports.dto.ReportFieldDto;
-import ru.avm.reports.dto.ReportFilterDto;
 import ru.avm.reports.dto.ReportResultDto;
+import ru.avm.reports.repository.ReportRepository;
 import ru.avm.security.acl.admin.AclController;
 import ru.avm.security.acl.admin.AdminService;
 
@@ -20,41 +20,33 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Builder
 
+@Transactional
 @RestController
 @RequestMapping("reports")
 public class ReportController implements AclController {
-
     private final ReportService reportService;
-
+    private final ReportMapper reportMapper;
+    private final ReportRepository reportRepository;
     @Getter
     private final AdminService adminService;
-
+    @Builder.Default
     @Getter
     private final String aclType = Report.class.getName();
 
     @GetMapping
-    @PostFilter("hasAuthority('SCOPE_SERVCIE') || hasPermission(filterObject.id, @reportController.aclType, 'read')")
     public List<ReportDto> reports() {
-        return reportService.allReports();
+        return reportService.allReports().stream().map(reportMapper::toDtoBrief).collect(Collectors.toList());
     }
 
-    @GetMapping("{id}/fields")
+    @GetMapping("{id}")
     @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
-    public List<ReportFieldDto> reportFields(@PathVariable Long id) {
-        return reportService.reportFields(id);
-    }
-
-    @GetMapping("{id}/filters")
-    @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
-    public List<ReportFilterDto> reportFilters(@PathVariable Long id) {
-        return reportService.reportFilters(id);
-    }
-
-    @GetMapping({"{id}", "edit/{id}"})
-    @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
-    public ReportDto runReport(@PathVariable Long id) {
-        return reportService.report(id);
+    public ReportDto report(@PathVariable Long id) {
+        val report = reportRepository.findById(id).orElseThrow();
+        val dto = reportMapper.toDto(report);
+        System.out.println(dto);
+        return dto;
     }
 
     @GetMapping("{id}/run")

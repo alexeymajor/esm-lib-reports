@@ -13,8 +13,13 @@ public class ReportFieldDto {
     Long id;
     String title;
     String description;
+    String term;
     String field;
+    String groupTerm;
     String total;
     String type;
+    Integer place;
+    @Builder.Default
+    Boolean visible = true;
 }
 

@@ -1,8 +1,10 @@
 package ru.avm.reports;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.avm.reports.converter.DefaultConverter;
@@ -10,12 +12,7 @@ import ru.avm.reports.converter.ReportTypeConverter;
 import ru.avm.reports.domain.Report;
 import ru.avm.reports.domain.ReportField;
 import ru.avm.reports.domain.ReportFilter;
-import ru.avm.reports.dto.ReportDto;
-import ru.avm.reports.dto.ReportFieldDto;
-import ru.avm.reports.dto.ReportFilterDto;
 import ru.avm.reports.dto.ReportResultDto;
-import ru.avm.reports.repository.ReportFieldRepository;
-import ru.avm.reports.repository.ReportFilterRepository;
 import ru.avm.reports.repository.ReportRepository;
 
 import javax.persistence.EntityManager;
@@ -27,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
+@Builder
 
 @Service
 @Transactional
@@ -35,38 +33,12 @@ public class ReportService {
     private final EntityManager entityManager;
     private final DefaultConverter defaultConverter;
     private final Map<String, ReportTypeConverter> converters;
-    private final ReportFilterRepository reportFilterRepository;
-    private final ReportFieldRepository reportFieldRepository;
     private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
 
-    public List<ReportDto> allReports() {
-        return reportRepository.findAll().stream()
-                .map(reportMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<ReportFieldDto> reportFields(Long reportId) {
-        return reportRepository.findById(reportId)
-                .map(report -> report.getFields().stream()
-                        .filter(ReportField::getVisible)
-                        .sorted(Comparator.comparing(ReportField::getPlace))
-                        .map(reportMapper::toDto)
-                        .collect(Collectors.toList()))
-                .orElseThrow();
-    }
-
-    public List<ReportFilterDto> reportFilters(Long reportId) {
-        val report = reportRepository.findById(reportId).orElseThrow();
-        return report.getFilters().stream()
-                .filter(ReportFilter::getVisible)
-                .sorted(Comparator.comparing(ReportFilter::getPlace))
-                .map(reportMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public ReportDto report(Long id) {
-        return reportRepository.findById(id).map(reportMapper::toDto).orElseThrow();
+    @PostFilter("hasAuthority('SCOPE_SERVCIE') || hasPermission(filterObject.id, @reportController.aclType, 'read')")
+    public List<Report> allReports() {
+        return reportRepository.findAll();
     }
 
     @SneakyThrows
@@ -79,11 +51,12 @@ public class ReportService {
         val report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new Exception("report not found"));
 
-        val reportFields = reportFieldRepository.findAllById(fields).stream()
+        val reportFields = report.getFields().stream()
+                .filter(reportField -> fields.contains(reportField.getId()))
                 .sorted(Comparator.comparing(value -> fields.indexOf(value.getId())))
                 .collect(Collectors.toList());
 
-        val allFilters = reportFilterRepository.findAllByReportId(report.getId());
+        val allFilters = report.getFilters();
 
         val required = allFilters.stream()
                 .map(ReportFilter::getRequired)
