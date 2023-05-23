@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.14</version>
+        <version>2.6.15</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.avm</groupId>
     <artifactId>reports</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <name>reports</name>
     <description>reports</description>
     <properties>
@@ -19,9 +19,9 @@
         <lombok.version>1.18.24</lombok.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <com.vladmihalcea.hibernate-types-55>2.21.1</com.vladmihalcea.hibernate-types-55>
-        <avm.security>1.0.2</avm.security>
-        <avm.common>1.0.2</avm.common>
-        <avm.profile>1.0.2</avm.profile>
+        <avm.security>1.0.3</avm.security>
+        <avm.common>1.0.3</avm.common>
+        <avm.profile>1.0.3</avm.profile>
     </properties>
     <dependencies>
         <dependency>
