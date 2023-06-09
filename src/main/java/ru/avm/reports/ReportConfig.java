@@ -28,7 +28,8 @@ public class ReportConfig {
 
     @Bean
     public Map<String, ReportTypeConverter> converterMap() {
-        return converters.stream().collect(Collectors.toMap(ReportTypeConverter::myType, Function.identity()));
+        return converters.stream().collect(Collectors
+                .toMap(ReportTypeConverter::myType, Function.identity()));
     }
     @Bean
     public ReportMapper reportMapper() {

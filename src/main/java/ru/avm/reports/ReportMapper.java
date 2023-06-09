@@ -22,12 +22,10 @@ public interface ReportMapper {
 
     @Mapping(target = "filtersVisible", ignore = true)
     @Mapping(target = "fieldsVisible", ignore = true)
-    @Mapping(target = "id", ignore = true)
     Report toDomain(ReportDto dto);
 
     @Mapping(target = "filtersVisible", ignore = true)
     @Mapping(target = "fieldsVisible", ignore = true)
-    @Mapping(target = "id", ignore = true)
     void updateDomain(@MappingTarget Report domain, ReportDto dto);
 
     @Named("full")
