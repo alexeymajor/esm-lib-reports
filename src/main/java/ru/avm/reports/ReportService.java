@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,7 +120,7 @@ public class ReportService {
 
         val groupBy = fields.stream()
                 .map(ReportField::getGroupTerm)
-                .filter(Objects::nonNull)
+                .filter(Strings::isNotBlank)
                 .distinct().collect(Collectors.toList());
 
         return entityManager.createNativeQuery(
