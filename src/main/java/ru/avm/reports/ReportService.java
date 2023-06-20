@@ -75,19 +75,18 @@ public class ReportService {
 
         required.removeAll(existsRequired);
 
-        if (required.size() > 0) {
+        if (required.size() > 0)
             throw new Exception("не все обязательные фильтры заполнены " + required);
-        }
 
         val query = report.getIsNative() ? createNativeReport(report, reportFields, reportFilters)
                 : createQuery(report, reportFields, reportFilters);
 
         reportFilters.forEach(reportFilter -> {
-            val param = query.getParameter("p" + reportFilter.getId());
+            val param = query.getParameter(getFilterParameter(reportFilter));
 
             val type = param.getParameterType();
 
-            query.setParameter("p" + reportFilter.getId(),
+            query.setParameter(getFilterParameter(reportFilter),
                     getParameter(reportFilter, type, filters.get(reportFilter.getId())));
         });
 
@@ -121,7 +120,8 @@ public class ReportService {
         val groupBy = fields.stream()
                 .map(ReportField::getGroupTerm)
                 .filter(Strings::isNotBlank)
-                .distinct().collect(Collectors.toList());
+                .distinct()
+                .collect(Collectors.toList());
 
         return entityManager.createNativeQuery(
                 "select " + String.join(",", select) +
@@ -137,12 +137,17 @@ public class ReportService {
                                 .collect(Collectors.joining(",")), Tuple.class);
     }
 
+    private String getFilterParameter(ReportFilter reportFilter) {
+        if (Strings.isBlank(reportFilter.getParameter())) return "p" + reportFilter.getId();
+        return reportFilter.getParameter();
+    }
+
     private String getWhere(Report report, List<ReportFilter> filters) {
 
         val filtersString = Optional.of(
                         filters.stream()
-                                .map(reportFilter -> reportFilter.getClause()
-                                        .replace("?", ":p" + reportFilter.getId()))
+                                .map(filter -> filter.getClause()
+                                        .replace("?", ":" + getFilterParameter(filter)))
                                 .collect(Collectors.joining(" and ")))
                 .filter(whereFilter -> !whereFilter.isBlank());
 

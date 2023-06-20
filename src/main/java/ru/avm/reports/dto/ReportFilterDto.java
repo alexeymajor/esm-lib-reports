@@ -12,6 +12,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ReportFilterDto {
     Long id;
     String required;
+    String parameter;
     String description;
     String clause;
     String type;

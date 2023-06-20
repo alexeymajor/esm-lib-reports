@@ -29,6 +29,9 @@ public class ReportFilter implements Serializable {
     @Column(name = "id", unique = true)
     private Long id;
     @Setter
+    @Column(name = "parameter")
+    private String parameter;
+    @Setter
     @Column(name = "required")
     private String required;
     @Setter

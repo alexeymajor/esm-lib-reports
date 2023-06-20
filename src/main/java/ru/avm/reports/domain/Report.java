@@ -27,10 +27,10 @@ public class Report implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
     @Setter
-    @Column(name = "text", columnDefinition = "TEXT")
+    @Column(name = "text", columnDefinition = "text")
     private String text;
     @Setter
-    @Column(name = "where_clause")
+    @Column(name = "where_clause", columnDefinition = "text")
     private String whereClause;
     @Setter
     @Column(name = "position")
@@ -61,7 +61,6 @@ public class Report implements Serializable {
     @CollectionTable(name = "t_report_filter", joinColumns = {@JoinColumn(name = "report_id")})
     @OrderColumn(name = "place")
     private final List<ReportFilter> filters = new ArrayList<>();
-
     @Builder.Default
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "t_report_filter", joinColumns = {@JoinColumn(name = "report_id")})
