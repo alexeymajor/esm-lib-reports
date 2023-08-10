@@ -45,9 +45,7 @@ public class ReportService {
     @SneakyThrows
     public ReportResultDto runReport(Long reportId, List<Long> fields, Map<Long, String[]> filters) {
 
-        if (fields.size() == 0) {
-            throw new Exception("no fields selected for report");
-        }
+        if (fields.isEmpty()) throw new Exception("no fields selected for report");
 
         val report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new Exception("report not found"));
@@ -70,12 +68,12 @@ public class ReportService {
 
         val existsRequired = reportFilters.stream()
                 .map(ReportFilter::getRequired)
-                .filter(Objects::nonNull)
+                .filter(Strings::isNotBlank)
                 .collect(Collectors.toSet());
 
         required.removeAll(existsRequired);
 
-        if (required.size() > 0)
+        if (!required.isEmpty())
             throw new Exception("не все обязательные фильтры заполнены " + required);
 
         val query = report.getIsNative() ? createNativeReport(report, reportFields, reportFilters)
@@ -123,13 +121,14 @@ public class ReportService {
                 .distinct()
                 .collect(Collectors.toList());
 
+        //noinspection SqlSourceToSinkFlow
         return entityManager.createNativeQuery(
                 "select " + String.join(",", select) +
                         " from " + report.getEntity() +
 
                         getWhere(report, filters) +
 
-                        (groupBy.size() == 0 ? "" : " group by " + String.join(",", groupBy)) +
+                        (groupBy.isEmpty() ? "" : " group by " + String.join(",", groupBy)) +
 
                         " order by " +
                         IntStream.range(1, fields.size() + 1)
@@ -171,10 +170,11 @@ public class ReportService {
                 .filter(Objects::nonNull)
                 .distinct().collect(Collectors.toList());
 
+        //noinspection SqlSourceToSinkFlow
         return entityManager.createQuery(
                 "select " + String.join(",", select) +
                         " from " + report.getEntity() + " " + getWhere(report, filters) +
-                        (groupBy.size() == 0 ? "" : " group by " + String.join(",", groupBy)) +
+                        (groupBy.isEmpty() ? "" : " group by " + String.join(",", groupBy)) +
 
                         " order by " +
                         IntStream.range(1, fields.size() + 1)
