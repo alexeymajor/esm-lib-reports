@@ -44,9 +44,7 @@ public class ReportController implements AclController {
     @PreAuthorize("hasAuthority('SCOPE_SERVCIE') || hasPermission(#id, @reportController.aclType, 'read')")
     public ReportDto report(@PathVariable Long id) {
         val report = reportRepository.findById(id).orElseThrow();
-        val dto = reportMapper.toDto(report);
-        System.out.println(dto);
-        return dto;
+        return reportMapper.toDto(report);
     }
 
     @GetMapping("{id}/run")
